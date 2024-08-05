@@ -11,9 +11,10 @@ from scipy.spatial import ConvexHull
 from std_msgs.msg import Header
 from geometry_msgs.msg import Pose
 from high_reflectivity_detection.msg import DetectionResult
+from pvesti.msg import UAVPose
 
 # Publisher
-detection_pub = rospy.Publisher('/detection_result', DetectionResult, queue_size=10)
+detection_pub = rospy.Publisher('/uav_positions', UAVPose, queue_size=1)
 
 def point_cloud_callback(msg):
     # Read point cloud data from message
@@ -164,7 +165,7 @@ def publish_detection_result(t_shape_clusters):
     """
     Publish detection results
     """
-    detection_msg = DetectionResult()
+    detection_msg = UAVPose()
     detection_msg.header = Header()
     detection_msg.header.stamp = rospy.Time.now()
     detection_msg.uav_count = len(t_shape_clusters)

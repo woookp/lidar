@@ -61,10 +61,17 @@ def point_cloud_callback(msg):
 
         # Find all T-shaped clusters
         for cluster_points in clusters:
-            if len(cluster_points) >= 10 and is_t_shape(cluster_points):
+            cluster_center = cluster.mean(axis = 0)
+            distance_to_origin = np.linalg.norm(cluster_center)
+            if distance_to_origin <= 3.5 and len(cluster_points) >= 10 and is_t_shape(cluster_points):
                 cluster_center = cluster_points.mean(axis=0)
                 t_shape_clusters.append((cluster_center, cluster_points))
                 rospy.loginfo(f"T-shaped point cloud position: {cluster_center}")
+            if distance_to_origin > 3.5 and len(cluster_points) >= 5 and is_t_shape(cluster_points):
+                cluster_center = cluster_points.mean(axis=0)
+                t_shape_clusters.append((cluster_center, cluster_points))
+                rospy.loginfo(f"T-shaped point cloud position: {cluster_center}")
+
 
         if t_shape_clusters:
             rospy.loginfo(f"Detected {len(t_shape_clusters)} T-shaped point clouds")

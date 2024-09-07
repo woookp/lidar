@@ -56,7 +56,12 @@ def point_cloud_callback(msg):
 
         # Calculate the variance of each cluster and select the clusters with the smallest variance
         for cluster in clusters:
-            if len(cluster) >= 10:
+            cluster_center = cluster.mean(axis = 0)
+            distance_to_origin = np.linalg.norm(cluster_center)
+            if distance_to_origin <= 3.5 and len(cluster) >= 10:
+                variance = np.var(cluster, axis=0).sum()
+                variances_and_clusters.append((variance, cluster))
+            if distance_to_origin > 3.5 and len(cluster) >= 5:
                 variance = np.var(cluster, axis=0).sum()
                 variances_and_clusters.append((variance, cluster))
 
